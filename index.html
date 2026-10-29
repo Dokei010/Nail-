@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Nail Studio — Запись на маникюр</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'media',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            light: '#fdf6f7',
+                            DEFAULT: '#d68b9a',
+                            dark: '#9a5b67',
+                            bgLight: '#fcfafb',
+                            bgDark: '#161314',
+                            cardLight: 'rgba(255, 255, 255, 0.7)',
+                            cardDark: 'rgba(34, 28, 30, 0.7)',
+                        }
+                    },
+                    animation: {
+                        'fade-up': 'fadeUp 0.8s ease-out forwards',
+                        'pulse-glow': 'pulseGlow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(214, 139, 154, 0.4)' },
+                            '50%': { boxShadow: '0 0 25px rgba(214, 139, 154, 0.8)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Theming */
+        body {
+            background-color: #fcfafb;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(214, 139, 154, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(214, 139, 154, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #2a1d22;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #161314;
+                background-image: 
+                    radial-gradient(at 0% 0%, rgba(214, 139, 154, 0.1) 0px, transparent 50%),
+                    radial-gradient(at 100% 100%, rgba(214, 139, 154, 0.05) 0px, transparent 50%);
+                color: #f5ebeb;
+            }
+        }
+
+        /* Glassmorphism utilities */
+        .glass-card {
+            background: var(--tw-colors-brand-cardLight);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+        }
+        @media (prefers-color-scheme: dark) {
+            .glass-card {
+                background: var(--tw-colors-brand-cardDark);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        /* Custom inputs */
+        input[type="text"], input[type="tel"], input[type="date"], textarea {
+            background: transparent;
+            border: 1px solid rgba(214, 139, 154, 0.3);
+            color-scheme: light dark;
+        }
+        input[type="text"]:focus, input[type="tel"]:focus, input[type="date"]:focus, textarea:focus {
+            border-color: #d68b9a;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(214, 139, 154, 0.15);
+        }
+        
+        input[type="checkbox"] {
+            accent-color: #d68b9a;
+        }
+
+        /* Hide scrollbar but keep functionality */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(214, 139, 154, 0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(214, 139, 154, 0.5); }
+    </style>
+</head>
+<body class="antialiased pb-44 selection:bg-brand/30">
+
+    <!-- Premium Hero Section -->
+    <header class="relative w-full h-[65vh] min-h-[450px] max-h-[700px] flex items-center justify-center overflow-hidden rounded-b-[2.5rem] shadow-xl">
+        <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+             alt="Beautiful Manicure" 
+             class="absolute inset-0 w-full h-full object-cover object-center scale-105 transform hover:scale-100 transition-transform duration-10000 ease-out" />
+        
+        <!-- Gradient Overlays -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-[#161314]/90 dark:to-[#161314]"></div>
+        <div class="absolute inset-0 bg-brand/10 mix-blend-overlay"></div>
+        
+        <div class="relative z-10 text-center text-white px-6 w-full max-w-2xl animate-fade-up">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6 shadow-2xl text-2xl">💅</div>
+            <h1 class="font-serif text-5xl md:text-7xl font-bold mb-4 tracking-tight drop-shadow-lg">Nail Studio</h1>
+            <p class="font-sans text-lg md:text-xl font-light tracking-widest mb-10 opacity-90 uppercase text-white/90">Искусство на кончиках пальцев</p>
+            <a href="#book" class="inline-block bg-white/10 backdrop-blur-xl border border-white/30 text-white font-medium py-4 px-10 rounded-full hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+                Записаться онлайн
+            </a>
+        </div>
+    </header>
+
+    <div class="max-w-xl mx-auto px-4 py-12">
+        <!-- Booking Form Container -->
+        <section id="book" class="space-y-12">
+            
+            <!-- 1. Services -->
+            <div class="animate-fade-up" style="animation-delay: 0.1s;">
+                <h2 class="text-2xl mb-6 font-medium flex items-baseline gap-2">
+                    <span class="font-serif text-brand italic text-3xl">01.</span> Услуга
+                </h2>
+                <div id="services" class="flex flex-col gap-3"></div>
+            </div>
+
+            <!-- 2. Length (Conditional) -->
+            <div id="lenBox" class="animate-fade-up transition-all duration-500" style="animation-delay: 0.2s;">
+                <h2 class="text-2xl mb-6 font-medium flex items-baseline gap-2">
+                    <span class="font-serif text-brand italic text-3xl">02.</span> Длина ногтей
+                </h2>
+                <div id="lens" class="grid grid-cols-5 gap-2 md:gap-3"></div>
+            </div>
+
+            <!-- 3. Strengthening -->
+            <div class="animate-fade-up" style="animation-delay: 0.3s;">
+                <h2 class="text-2xl mb-6 font-medium flex items-baseline gap-2">
+                    <span class="font-serif text-brand italic text-3xl">03.</span> Укрепление
+                </h2>
+                <div id="str" class="flex flex-col gap-3"></div>
+            </div>
+
+            <!-- 4. Design (ИЗМЕНЕНО: Без фоток, только названия) -->
+            <div class="animate-fade-up" style="animation-delay: 0.4s;">
+                <h2 class="text-2xl mb-6 font-medium flex items-baseline gap-2">
+                    <span class="font-serif text-brand italic text-3xl">04.</span> Дизайн
+                </h2>
+                <!-- Изменена сетка на колонку -->
+                <div id="designs" class="flex flex-col gap-3"></div>
+                <p class="text-sm opacity-60 mt-4 italic text-center font-light">Стоимость сложного дизайна мастер уточнит при записи.</p>
+            </div>
+
+            <!-- 5. Extras -->
+            <div class="animate-fade-up" style="animation-delay: 0.5s;">
+                <h2 class="text-2xl mb-6 font-medium flex items-baseline gap-2">
+                    <span class="font-serif text-brand italic text-3xl">05.</span> Дополнительно
+                </h2>
+                <div id="extra" class="glass-card rounded-3xl p-5 md:p-7 flex flex-col gap-2"></div>
+            </div>
+
+            <!-- 6. Date & Time -->
+            <div class="animate-fade-up" style="animation-delay: 0.6s;">
+                <h2 class="text-2xl mb-6 font-medium flex items-baseline gap-2">
+                    <span class="font-serif text-brand italic text-3xl">06.</span> Дата и время
+                </h2>
+                <div class="glass-card rounded-3xl p-6 md:p-8 space-y-6">
+                    <div>
+                        <label class="block text-sm uppercase tracking-wider opacity-60 mb-2 font-medium">Желаемая дата</label>
+                        <input type="date" id="date" class="w-full px-5 py-4 rounded-2xl glass-card transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm uppercase tracking-wider opacity-60 mb-3 font-medium">Свободное время</label>
+                        <div id="slots" class="grid grid-cols-3 gap-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. User Data -->
+            <div class="animate-fade-up" style="animation-delay: 0.7s;">
+                <h2 class="text-2xl mb-6 font-medium flex items-baseline gap-2">
+                    <span class="font-serif text-brand italic text-3xl">07.</span> Контакты
+                </h2>
+                <div class="glass-card rounded-3xl p-6 md:p-8 space-y-5">
+                    <div>
+                        <label for="nm" class="block text-sm uppercase tracking-wider opacity-60 mb-2 font-medium">Ваше имя</label>
+                        <input type="text" id="nm" placeholder="Как к вам обращаться" autocomplete="name" class="w-full px-5 py-4 rounded-2xl glass-card transition-all placeholder:opacity-50">
+                    </div>
+                    <div>
+                        <label for="ph" class="block text-sm uppercase tracking-wider opacity-60 mb-2 font-medium">Телефон</label>
+                        <input type="tel" id="ph" placeholder="+7 (___) ___-__-__" autocomplete="tel" class="w-full px-5 py-4 rounded-2xl glass-card transition-all placeholder:opacity-50">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Output Section -->
+            <div id="out" class="hidden glass-card rounded-3xl p-6 md:p-8 shadow-2xl border-brand/30 animate-fade-up mt-8">
+                <b class="block text-xl font-serif mb-2">Заявка сформирована</b>
+                <p class="text-sm opacity-70 mb-4 leading-relaxed font-light">
+                    Текст скопирован в буфер обмена. Перейдите в чат с мастером и вставьте его. Если копирование не сработало, выделите текст ниже.
+                </p>
+                <textarea id="ta" readonly class="w-full h-48 rounded-2xl bg-black/5 dark:bg-white/5 p-4 text-sm font-inherit focus:outline-none mb-4 resize-none"></textarea>
+                <div class="text-sm opacity-70 text-center">
+                    Мессенджер не открылся автоматически?<br>
+                    <a id="lnk" target="_blank" rel="noopener" class="text-brand font-medium break-all mt-2 inline-block hover:underline"></a>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- Sticky Bottom Bar - Premium Glassmorphism -->
+    <div class="fixed bottom-0 left-0 w-full z-50">
+        <div class="absolute inset-0 bg-white/70 dark:bg-[#161314]/80 backdrop-blur-2xl border-t border-white/20 dark:border-white/5"></div>
+        <div class="relative max-w-xl mx-auto p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
+            <div class="flex justify-between items-baseline mb-4 px-2">
+                <span class="text-sm uppercase tracking-widest opacity-60 font-medium">Ориентировочно</span>
+                <b id="total" class="text-2xl md:text-3xl font-serif text-brand tracking-tight drop-shadow-sm">—</b>
+            </div>
+            <div class="grid gap-3">
+                <a id="send" target="_blank" rel="noopener" class="block w-full bg-brand text-white text-center font-medium py-4 px-6 rounded-2xl cursor-pointer hover:bg-brand-dark transition-all duration-300 shadow-lg animate-pulse-glow">
+                    Отправить заявку в Max
+                </a>
+                <button id="copy" class="block w-full bg-transparent border border-brand/50 text-brand dark:text-brand-light text-center font-medium py-3.5 px-6 rounded-2xl cursor-pointer hover:bg-brand/10 transition-all duration-300">
+                    Только скопировать текст
+                </button>
+            </div>
+            <div id="err" class="text-red-500/90 text-sm mt-3 text-center min-h-[20px] font-medium"></div>
+        </div>
+    </div>
+
+    <script>
+        // ⚙️ НАСТРОЙКИ МАСТЕРА
+        const MAX_URL = "https://max.ru/u/f9LHodD0cOIPH38ZINPCuz5s7Ya3KRugkZSdQQa3Ldic40_iZ8DzzsNyWQ4";
+        const LEN = [
+            {k:"S", n:"короткие", p:2200}, {k:"M", n:"средние", p:2400}, {k:"L", n:"длинные", p:2700},
+            {k:"XL", n:"экстра", p:3100}, {k:"XXL", n:"ультра", p:3600}
+        ];
+        const SERVICES = [
+            {n:"Аппаратный маникюр + гель-лак", d:"Снятие, комби-маникюр, выравнивание, покрытие", len:1},
+            {n:"Наращивание", d:"Гель / акригель", p:2000},
+            {n:"Коррекция наращивания", d:"Через 3–4 недели", p:2000, ex:1},
+            {n:"Аппаратный маникюр", d:"Без покрытия", p:1500},
+            {n:"Мужской маникюр", d:"Без покрытия", p:1600},
+            {n:"Мужской маникюр + покрытие", d:"Аппаратный, с покрытием", p:2400},
+            {n:"Детский маникюр", d:"До 13 лет", p:1350},
+            {n:"Детский маникюр + покрытие", d:"До 13 лет", p:1350},
+            {n:"Снятие", d:"Без покрытия", p:500},
+            {n:"Снятие + уход", d:"Снятие и уход за кутикулой", p:1200},
+            {n:"Восстановление архитектуры", d:"Выравнивание и коррекция формы", p:2900}
+        ];
+        const STR = [
+            {n:"Без укрепления", d:"", p:0},
+            {n:"LIGHT", d:"Укрепляющая база", p:350},
+            {n:"HARD", d:"Укрепление гелем", p:550},
+            {n:"IDEAL", d:"Построение архитектуры акригелем, все ногти", p:850}
+        ];
+        
+        // ИЗМЕНЕНО: Удалены ссылки на картинки
+        const DESIGNS = [
+            {n:"Однотон"},
+            {n:"Френч / Нюд"},
+            {n:"Градиент / Омбре"},
+            {n:"Кошачий глаз"},
+            {n:"Стразы / Втирка"},
+            {n:"Авторский дизайн"}
+        ];
+
+        const UNITS = [
+            {n:"Ремонт", d:"1 ноготь", p:220},
+            {n:"Наращивание", d:"1 ноготь", p:320},
+            {n:"Поднятие клюющего", d:"1 ноготь", p:270},
+            {n:"Достраивание углов", d:"1 ноготь", p:220}
+        ];
+        const FLAGS = [
+            {n:"Уход за кутикулой, SPA", d:"Премиальное масло и массаж", p:0}
+        ];
+        const TIMES = ["09:00", "12:00", "15:00"];
+        
+        // State
+        let s = { svc: 0, len: 1, str: 0, des: 0, time: "", q: [0,0,0,0], f: [false] };
+
+        // Utils
+        const rub = (n) => n.toLocaleString("ru-RU") + " ₽";
+        const $ = (i) => document.getElementById(i);
+
+        // Calculate total
+        function price() {
+            let v = SERVICES[s.svc];
+            let t = v.len ? LEN[s.len].p : v.p;
+            t += STR[s.str].p;
+            UNITS.forEach((u, i) => { t += u.p * s.q[i]; });
+            FLAGS.forEach((f, i) => { if(s.f[i]) t += f.p; });
+            return t;
+        }
+
+        function upd() {
+            $("total").textContent = "от " + rub(price());
+        }
+
+        // Render Functions
+        function drawServices() {
+            const el = $("services");
+            el.innerHTML = "";
+            SERVICES.forEach((x, i) => {
+                const pr = x.ex ? rub(x.p) : "от " + rub(x.len ? LEN[0].p : x.p);
+                const isActive = i === s.svc;
+                
+                const clsActive = "bg-brand text-white shadow-xl shadow-brand/20 scale-[1.01] border-transparent";
+                const clsInactive = "glass-card hover:bg-white/40 dark:hover:bg-brand-cardDark hover:scale-[1.01]";
+                
+                el.innerHTML += `
+                    <button class="w-full flex justify-between items-center gap-4 p-5 md:p-6 rounded-3xl text-left cursor-pointer transition-all duration-300 ease-out border border-white/20 dark:border-white/5 ${isActive ? clsActive : clsInactive}" onclick="setSvc(${i})">
+                        <div class="flex-1">
+                            <div class="text-[16px] md:text-[17px] font-semibold tracking-tight ${isActive ? 'text-white' : ''}">${x.n}</div>
+                            ${x.d ? `<div class="text-[13px] mt-1.5 opacity-80 font-light ${isActive ? 'text-white' : ''}">${x.d}</div>` : ''}
+                        </div>
+                        <div class="font-serif font-semibold whitespace-nowrap pl-2 text-lg ${isActive ? 'text-white' : 'text-brand'}">${pr}</div>
+                    </button>
+                `;
+            });
+        }
+        window.setSvc = (i) => { s.svc = i; drawServices(); drawLens(); upd(); };
+
+        function drawLens() {
+            const box = $("lenBox");
+            const el = $("lens");
+            
+            if (!SERVICES[s.svc].len) {
+                box.style.opacity = '0';
+                setTimeout(() => box.style.display = "none", 300);
+                return;
+            }
+            
+            box.style.display = "block";
+            setTimeout(() => box.style.opacity = '1', 10);
+            
+            el.innerHTML = "";
+            LEN.forEach((x, i) => {
+                const isActive = i === s.len;
+                const clsActive = "bg-brand text-white shadow-lg shadow-brand/20 scale-105 border-transparent";
+                const clsInactive = "glass-card hover:bg-white/40 dark:hover:bg-brand-cardDark";
+                
+                el.innerHTML += `
+                    <button class="py-4 px-1 rounded-2xl text-center cursor-pointer transition-all duration-300 border border-white/20 dark:border-white/5 ${isActive ? clsActive : clsInactive}" onclick="setLen(${i})">
+                        <span class="block font-serif font-bold text-lg mb-1">${x.k}</span>
+                        <span class="block text-[10px] md:text-[11px] uppercase tracking-wider opacity-80 font-medium">${x.n}</span>
+                    </button>
+                `;
+            });
+        }
+        window.setLen = (i) => { s.len = i; drawLens(); upd(); };
+
+        function drawStr() {
+            const el = $("str");
+            el.innerHTML = "";
+            STR.forEach((x, i) => {
+                const isActive = i === s.str;
+                const pr = x.p ? "+ " + rub(x.p) : "Входит в ст-ть";
+                
+                const clsActive = "bg-brand text-white shadow-xl shadow-brand/20 scale-[1.01] border-transparent";
+                const clsInactive = "glass-card hover:bg-white/40 dark:hover:bg-brand-cardDark hover:scale-[1.01]";
+                
+                el.innerHTML += `
+                    <button class="w-full flex justify-between items-center gap-4 p-5 rounded-3xl text-left cursor-pointer transition-all duration-300 border border-white/20 dark:border-white/5 ${isActive ? clsActive : clsInactive}" onclick="setStr(${i})">
+                        <div class="flex-1">
+                            <div class="text-[16px] font-semibold tracking-tight ${isActive ? 'text-white' : ''}">${x.n}</div>
+                            ${x.d ? `<div class="text-[13px] mt-1 opacity-80 font-light ${isActive ? 'text-white' : ''}">${x.d}</div>` : ''}
+                        </div>
+                        <div class="font-serif whitespace-nowrap pl-2 font-medium ${isActive ? 'text-white' : 'text-brand opacity-80'}">${pr}</div>
+                    </button>
+                `;
+            });
+        }
+        window.setStr = (i) => { s.str = i; drawStr(); upd(); };
+
+        // ИЗМЕНЕНО: Новая функция отрисовки кнопок дизайна без картинок
+        function drawDesigns() {
+            const el = $("designs");
+            el.innerHTML = "";
+            DESIGNS.forEach((x, i) => {
+                const isActive = i === s.des;
+                
+                const clsActive = "bg-brand text-white shadow-xl shadow-brand/20 scale-[1.01] border-transparent";
+                const clsInactive = "glass-card hover:bg-white/40 dark:hover:bg-brand-cardDark hover:scale-[1.01]";
+                
+                el.innerHTML += `
+                    <button class="w-full flex justify-between items-center gap-4 p-5 rounded-3xl text-left cursor-pointer transition-all duration-300 border border-white/20 dark:border-white/5 ${isActive ? clsActive : clsInactive}" onclick="setDes(${i})">
+                        <div class="flex-1">
+                            <div class="text-[16px] font-semibold tracking-tight ${isActive ? 'text-white' : ''}">${x.n}</div>
+                        </div>
+                    </button>
+                `;
+            });
+        }
+        window.setDes = (i) => { s.des = i; drawDesigns(); upd(); };
+
+        function drawExtra() {
+            const el = $("extra");
+            el.innerHTML = "";
+            
+            UNITS.forEach((u, i) => {
+                const row = document.createElement("div");
+                row.className = "flex justify-between items-center py-3 border-b border-black/5 dark:border-white/5 last:border-0";
+                
+                row.innerHTML = `
+                    <div class="pr-2">
+                        <div class="text-[15px] font-medium">${u.n}</div>
+                        <div class="text-xs opacity-60 font-light mt-0.5">${u.d} · от ${rub(u.p)}</div>
+                    </div>
+                `;
+                
+                const ctrl = document.createElement("div");
+                ctrl.className = "flex items-center gap-4 bg-black/5 dark:bg-white/5 rounded-full px-2 py-1";
+                
+                const btnM = document.createElement("button");
+                btnM.className = "w-8 h-8 rounded-full text-xl flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity hover:text-brand";
+                btnM.textContent = "−";
+                btnM.onclick = () => { if(s.q[i] > 0) { s.q[i]--; drawExtra(); upd(); } };
+                
+                const count = document.createElement("b");
+                count.className = "min-w-[16px] text-center font-serif text-lg";
+                count.textContent = s.q[i];
+                
+                const btnP = document.createElement("button");
+                btnP.className = "w-8 h-8 rounded-full text-xl flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity hover:text-brand";
+                btnP.textContent = "+";
+                btnP.onclick = () => { if(s.q[i] < 10) { s.q[i]++; drawExtra(); upd(); } };
+                
+                ctrl.appendChild(btnM);
+                ctrl.appendChild(count);
+                ctrl.appendChild(btnP);
+                row.appendChild(ctrl);
+                el.appendChild(row);
+            });
+
+            FLAGS.forEach((f, i) => {
+                const row = document.createElement("div");
+                row.className = "flex justify-between items-center py-4 mt-2";
+                
+                const label = document.createElement("label");
+                label.className = "flex gap-4 items-center w-full cursor-pointer group";
+                
+                const cbWrapper = document.createElement("div");
+                cbWrapper.className = "relative flex items-center justify-center w-6 h-6 rounded-lg border-2 border-brand/50 group-hover:border-brand transition-colors bg-transparent overflow-hidden";
+                
+                const cb = document.createElement("input");
+                cb.type = "checkbox";
+                cb.className = "absolute opacity-0 w-full h-full cursor-pointer";
+                cb.checked = s.f[i];
+                
+                const checkIcon = document.createElement("div");
+                checkIcon.className = `w-full h-full bg-brand flex items-center justify-center text-white transition-transform duration-300 ${s.f[i] ? 'scale-100' : 'scale-0'}`;
+                checkIcon.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>';
+                
+                cb.onchange = () => { 
+                    s.f[i] = cb.checked; 
+                    checkIcon.className = `w-full h-full bg-brand flex items-center justify-center text-white transition-transform duration-300 ${cb.checked ? 'scale-100' : 'scale-0'}`;
+                    upd(); 
+                };
+                
+                cbWrapper.appendChild(cb);
+                cbWrapper.appendChild(checkIcon);
+                
+                const textWrap = document.createElement("div");
+                textWrap.className = "flex-1";
+                textWrap.innerHTML = `<div class="text-[15px] font-medium">${f.n}</div>` + (f.d ? `<div class="opacity-60 text-xs font-light mt-0.5">${f.d}</div>` : "");
+                
+                const pr = document.createElement("span");
+                pr.className = "font-serif font-semibold whitespace-nowrap pl-2 text-brand";
+                pr.textContent = f.p ? "+ от " + rub(f.p) : "Бесплатно";
+                
+                label.appendChild(cbWrapper);
+                label.appendChild(textWrap);
+                label.appendChild(pr);
+                row.appendChild(label);
+                el.appendChild(row);
+            });
+        }
+
+        // ---- Общие занятые слоты (Netlify Functions) ----
+        const API = "/api/slots";
+        let busy = new Set();
+        const slotKey = (d, t) => d + "_" + t;
+        const isBusy = (t) => { const d = $("date").value; return !!d && busy.has(slotKey(d, t)); };
+
+        let col = null;
+        async function api(body) {
+            if (!col) return { ok: false, status: 0 };
+            try {
+                const ref = col.doc(body.date + "_" + body.time);
+                const d = await ref.get();
+                if (d.exists) return { ok: false, status: 409 };
+                await ref.set({ date: body.date, time: body.time, at: Date.now() });
+                return { ok: true, status: 200 };
+            } catch (e) { return { ok: false, status: 0 }; }
+        }
+        async function loadBusy() {}
+        (async () => {
+            try {
+                if (!window.claude || !claude.use) return;
+                const db = await claude.use("db");
+                if (!db) return;
+                col = db.collection("bookings");
+                col.onSnapshot((snap) => {
+                    const n = new Set();
+                    snap.docs.forEach((d) => { const v = d.data(); if (v && v.date && v.time) n.add(v.date + "_" + v.time); });
+                    busy = n;
+                    if (s.time && isBusy(s.time)) s.time = "";
+                    drawSlots();
+                }, () => {});
+            } catch (e) {}
+        })();
+
+        function drawSlots() {
+            const el = $("slots");
+            el.innerHTML = "";
+            TIMES.forEach((t) => {
+                const taken = isBusy(t);
+                const isActive = s.time === t && !taken;
+                const clsActive = "bg-brand text-white shadow-md border-transparent scale-105";
+                const clsInactive = "glass-card hover:bg-white/40 dark:hover:bg-brand-cardDark";
+                const clsTaken = "glass-card opacity-40 line-through";
+                const canClick = !taken;
+                const cls = taken ? clsTaken : (isActive ? clsActive : clsInactive);
+                el.innerHTML += `
+                    <button ${canClick ? "" : "disabled"} class="py-3 md:py-4 rounded-2xl text-center text-[15px] font-medium transition-all duration-300 border border-white/20 dark:border-white/5 ${cls} ${canClick ? "cursor-pointer" : "cursor-not-allowed"}" onclick="setTime('${t}')">
+                        ${t}${taken ? '<span class="block text-[10px] uppercase tracking-wider no-underline">занято</span>' : ""}
+                    </button>
+                `;
+            });
+        }
+
+        window.setTime = (t) => {
+            if (isBusy(t)) return;
+            s.time = t; drawSlots();
+        };
+
+        $("date").addEventListener("change", () => {
+            if (s.time && isBusy(s.time)) s.time = "";
+            drawSlots();
+        });
+
+
+        // Generate Message
+        function msg() {
+            const v = SERVICES[s.svc];
+            let L = ["✨ Здравствуйте! Хочу записаться на красивый маникюр."];
+            L.push("");
+            
+            L.push("💅 Услуга: " + v.n + (v.len ? ", длина " + LEN[s.len].k + " (" + LEN[s.len].n + ")" : ""));
+            if(s.str) L.push("🛡 Укрепление: " + STR[s.str].n + " (" + STR[s.str].d.toLowerCase() + ")");
+            L.push("🎨 Дизайн: " + DESIGNS[s.des].n);
+            
+            let ex = [];
+            UNITS.forEach((u, i) => { if(s.q[i]) ex.push(u.n.toLowerCase() + " × " + s.q[i]); });
+            FLAGS.forEach((f, i) => { if(s.f[i]) ex.push(f.n.toLowerCase()); });
+            if(ex.length) L.push("➕ Дополнительно: " + ex.join(", "));
+            
+            L.push("");
+            L.push("🗓 Дата: " + $("date").value.split("-").reverse().join(".") + " в " + s.time);
+            L.push("💰 Примерная цена: от " + rub(price()));
+            L.push("");
+            L.push("👤 Имя: " + $("nm").value.trim());
+            L.push("📞 Телефон: " + $("ph").value.trim());
+            
+            return L.join("\n");
+        }
+
+        // Validation
+        function check() {
+            const e = $("err");
+            e.style.color = "#ef4444";
+            e.textContent = "";
+            
+            if(!$("date").value) { e.textContent = "Пожалуйста, выберите желаемую дату"; return false; }
+            if(!s.time) { e.textContent = "Пожалуйста, выберите удобное время"; return false; }
+            if(isBusy(s.time)) { e.textContent = "Это время уже занято, выберите другое"; s.time = ""; drawSlots(); return false; }
+            if(!$("nm").value.trim()) { e.textContent = "Как к вам обращаться? (введите имя)"; return false; }
+            if($("ph").value.trim().length < 6) { e.textContent = "Пожалуйста, укажите контактный телефон"; return false; }
+            
+            return true;
+        }
+
+        // Copy and Output
+        function prepare() {
+            const t = msg();
+            const ta = $("ta");
+            {
+                const d = $("date").value;
+                api({ action: "book", date: d, time: s.time }).then((r) => {
+                    if (r.status === 409) { const e = $("err"); e.style.color = "#ef4444"; e.textContent = "Это время только что заняли, выберите другое"; }
+                    loadBusy();
+                });
+            }
+            ta.value = t;
+            $("out").classList.remove("hidden");
+            
+            try { navigator.clipboard.writeText(t); } catch(x) {}
+            
+            try {
+                ta.select();
+                document.execCommand("copy");
+                ta.setSelectionRange(0,0);
+            } catch(x) {}
+            
+            const e = $("err");
+            e.style.color = "var(--tw-colors-brand)";
+            e.textContent = "✨ Заявка успешно скопирована!";
+        }
+
+        // Event Listeners
+        $("send").href = MAX_URL;
+        $("lnk").href = MAX_URL;
+        $("lnk").textContent = MAX_URL;
+        
+        $("send").onclick = function(ev) {
+            if(!check()) { ev.preventDefault(); return; }
+            prepare();
+        };
+        
+        $("copy").onclick = function() {
+            if(!check()) return;
+            prepare();
+            $("out").scrollIntoView({behavior: "smooth", block: "center"});
+        };
+
+        // Initialize App
+        const dt = $("date");
+        dt.min = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0,10);
+        
+        drawServices();
+        drawLens();
+        drawStr();
+        drawDesigns();
+        drawExtra();
+        drawSlots();
+        upd();
+    </script>
+</body>
+</html>
